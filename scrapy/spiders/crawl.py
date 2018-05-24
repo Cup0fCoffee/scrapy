@@ -32,8 +32,22 @@ class Rule(object):
 
 
 class CrawlSpider(Spider):
+    """ This is the most commonly used spider for crawling regular websites,
+    as it provides a convenient mechanism for following links by defining a
+    set of rules. It may not be the best suited for your particular web sites
+    or project, but it's generic enough for several cases, so you can start
+    from it and override it as needed for more custom functionality, or just
+    implement your own spider.
+    """
 
     rules = ()
+    """
+    Which is a list of one (or more) :class:`Rule` objects.
+    Each :class:`Rule` defines a certain behaviour for crawling the site.
+    Rules objects are described below. If multiple rules match the same link,
+    the first one will be used, according to the order they're defined in this
+    attribute.
+    """
 
     def __init__(self, *a, **kw):
         super(CrawlSpider, self).__init__(*a, **kw)
@@ -43,6 +57,12 @@ class CrawlSpider(Spider):
         return self._parse_response(response, self.parse_start_url, cb_kwargs={}, follow=True)
 
     def parse_start_url(self, response):
+        """
+        This method is called for the start_urls responses. It allows to parse
+        the initial responses and must return either an
+        :class:`~scrapy.item.Item` object, a :class:`~scrapy.http.Request`
+        object, or an iterable containing any of them.
+        """
         return []
 
     def process_results(self, response, results):
